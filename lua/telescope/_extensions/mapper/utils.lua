@@ -49,8 +49,17 @@ local function record_buf_lines(record)
   if record.row ~= nil then row = record.row else row = "" end
   if type(record.cmd) == "function" then cmd_str = "function" else cmd_str = record.cmd end
 
+  -- Handle category being a table in newer Neovim versions
+  -- In Neovim 0.10+, the category can be a table. We convert it to a string.
+  local category_str = ""
+  if type(record.category) == "table" then
+    category_str = table.concat(record.category, ", ")
+  elseif record.category then
+    category_str = record.category
+  end
+
   table.insert(lines, "Id:           " .. record.unique_identifier)
-  table.insert(lines, "Category:     " .. record.category)
+  table.insert(lines, "Category:     " .. category_str)
   table.insert(lines, "Mode:         " .. mode_str)
   table.insert(lines, "Keys:         " .. record.keys)
   table.insert(lines, "Command:      " .. cmd_str)

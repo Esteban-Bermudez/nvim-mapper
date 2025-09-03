@@ -19,6 +19,14 @@ end
 -- Creates a Telescope `finder` based on the given options
 -- and list of mappers
 M.mapper_finder = function(mappers)
+    -- Sanitize mapper data before processing.
+    -- In Neovim 0.10+, the category can be a table. We convert it to a string.
+    for _, mapper in ipairs(mappers) do
+        if type(mapper.category) == "table" then
+            mapper.category = table.concat(mapper.category, ", ")
+        end
+    end
+
     local widths = {
         keys = 0,
         category = 0,
